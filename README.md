@@ -87,7 +87,7 @@ Conventional attention-based seq2seq model for abstractive summarization suffers
 ![Model](https://github.com/justinlin610/LancoSum/raw/master/table/CGU.png)
 
 ##### Options
-'''
+```
 python3 train.py -log log_name -config config_yaml -gpus id -swish -selfatt
 '''
 
@@ -99,7 +99,7 @@ In the decoding process, conventional seq2seq models typically use a dense vecto
 ![Model](https://github.com/justinlin610/LancoSum/raw/master/table/WEAN.png)
 
 ##### Options
-'''
+```
 python3 train.py -log log_name -config config_yaml -gpus id -score_fn function_name('general', 'dot', 'concat')
 '''
 
@@ -111,7 +111,7 @@ Corpus from social media is generally long, containing many errors. A convention
 ![Model](https://github.com/justinlin610/LancoSum/raw/master/table/SuperAE.png)
 
 ##### Options
-'''
+```
 python3 train.py -log log_name -config config_yaml -gpus id -sae -loss_reg ('l2', 'l1', 'cos')
 '''
 
