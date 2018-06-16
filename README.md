@@ -1,7 +1,7 @@
 # LancoPKU Summarization
-This repository is the implementation of three novel NLP summarization models proposed by lancopku recently. These models achieves state-of-the-art performances and are applicable to different tasks of summarization. By modifying the '.yaml' configuration file, one can easily apply the codes to his own work. Names of these models and their corresponding papers are listed as follows:
+This repository provides a toolkit for abstractive summarization, which can assist researchers to implement the common baseline, the attention-based sequence-to-sequence model, as well as three models proposed by our group LancoPKU recently. These models can achieve the improved performance and are capable of generating summaries of higher quality. By modifying the '.yaml' configuration file or the command options, one can easily apply the models to his own work. Names of these models and their corresponding papers are listed as follows:
 
-1. Global Encoding for Abstractive Summarization, [[pdf]](https://arxiv.org/abs/1805.03989)
+1. Global Encoding for Abstractive Summarization [[pdf]](https://arxiv.org/abs/1805.03989)
 2. Word Embedding Attention Network (WEAN)  [[pdf]](https://arxiv.org/abs/1803.01465)
 3. SuperAE [[pdf]](https://arxiv.org/abs/1805.04869)
 
@@ -15,11 +15,11 @@ This repository is the implementation of three novel NLP summarization models pr
 ##### [---1.3 Preprocessing](#1.3)
 ##### [---1.4 Training](#1.4)
 ##### [---1.5 Evaluation](#1.5)
-#### [2. Citation](#2)
-####  [3. Introduction to Models](#3)
-##### [---3.1 Global Encoding](#3.1)
-##### [---3.2 WEAN](#3.2)
-##### [---3.3 SuperAE](#3.3)
+####  [2. Introduction to Models](#2)
+##### [---2.1 Global Encoding](#2.1)
+##### [---2.2 WEAN](#2.2)
+##### [---2.3 SuperAE](#2.3)
+#### [3. Citation](#3)
 
 
 ***********************************************************
@@ -40,9 +40,17 @@ This repository is the implementation of three novel NLP summarization models pr
 ***********************************************************
 
 <h4 id="1.2"> --- 1.2 Configuration </h4>
+Install PyTorch
+
+Clone the OpenNMT-py repository:
+'''
+git clone https://github.com/lancopku/LancoSum.git
+cd LancoSum
+'''
 
 In order to use pyrouge, set rouge path with the line below:
 ```
+pip install pyrouge
 pyrouge_set_rouge_path script/RELEASE-1.5.5
 ```
 
@@ -53,7 +61,7 @@ pyrouge_set_rouge_path script/RELEASE-1.5.5
 ```
 python3 preprocess.py -load_data path_to_data -save_data path_to_store_data
 ```
-Remember to put the data into a folder and name them *train.src*, *train.tgt*, *valid.src*, *valid.tgt*, *test.src* and *test.tgt*, and make a new folder inside called *data*
+Remember to put the data (plain text filea) into a folder and name them *train.src*, *train.tgt*, *valid.src*, *valid.tgt*, *test.src* and *test.tgt*, and make a new folder inside called *data*
 
 ***********************************************************
 <h4 id="1.4"> --- 1.4 Training </h4>
@@ -70,7 +78,46 @@ python3 train.py -log log_name -config config_yaml -gpus id -restore checkpoint 
 ```
 
 ***********************************************************
-<h2 id="2"> 2 Citation </h2>
+<h2 id="2"> 2 Introduction to Models </h2>
+
+<h4 id="2.1"> --- 2.1 Global Encoding </h4>
+
+##### Motivation & Idea
+Conventional attention-based seq2seq model for abstractive summarization suffers from repetition and semantic irrelevance. Therefore, we propose a model containing a convolutional neural network (CNN) fitering the encoder outputs so that they can contain some information of the global context. Self-attention mechanism is implemented as well in order to dig out the correlations among these new representations of encoder outputs.
+![Model](https://github.com/justinlin610/LancoSum/raw/master/table/CGU.png)
+
+##### Options
+```
+python3 train.py -log log_name -config config_yaml -gpus id -swish -selfatt
+```
+
+
+***********************************************************
+<h4 id="2.2"> --- 2.2 WEAN </h4>
+
+##### Motivation & Idea
+In the decoding process, conventional seq2seq models typically use a dense vector in each time step to generate a distribution over the vocabulary to choose the correct word output. However, such a method takes no account of the relationships between words in the vocabulary and also suffers from a large amount of parameters (hidden_size * vocab_size). Thus, in this model, we use a query system. The output of decoder is a query, the candidate words are the values, and the corresponding word representations are the keys. By refering to the word embeddings, our model is able to capture the semantic meaning of the words.
+![Model](https://github.com/justinlin610/LancoSum/raw/master/table/WEAN.png)
+
+##### Options
+```
+python3 train.py -log log_name -config config_yaml -gpus id -score_fn function_name('general', 'dot', 'concat')
+```
+
+***********************************************************
+<h4 id="2.3"> --- 2.3 SuperAE </h4>
+
+##### Motivation & Idea
+Corpus from social media is generally long, containing many errors. A conventional seq2seq model fails to compress a long sentence into an accurate representation. So we intend to use the representation of summary (which is shorter and easier to encode) to help supervise the encoder to generate better semantic representations of the source content during training. Moreover, ideas of adverserial network is used so as to dynamically dertermine the strength of such supervision.
+![Model](https://github.com/justinlin610/LancoSum/raw/master/table/SuperAE.png)
+
+##### Options
+```
+python3 train.py -log log_name -config config_yaml -gpus id -sae -loss_reg ('l2', 'l1', 'cos')
+```
+
+***********************************************************
+<h2 id="3"> 3 Citation </h2>
 
 Plese cite these papers when using relevant models in your research.
 #### Global Encoding:
@@ -104,31 +151,3 @@ Plese cite these papers when using relevant models in your research.
   year      = {2018}
 }
 ```
-***********************************************************
-<h2 id="3"> 3 Introduction to Models </h2>
-
-<h4 id="3.1"> --- 3.1 Global Encoding </h4>
-
-##### Motivation & Idea
-Conventional attention-based seq2seq model for abstractive summarization suffers from repetition and semantic irrelevance. Therefore, we propose a model containing a convolutional neural network (CNN) fitering the encoder outputs so that they can contain some information of the global context. Self-attention mechanism is implemented as well in order to dig out the correlations among these new representations of encoder outputs.
-
-##### Performance on LCSTS(ROUGE)
-![On LSCTS](https://github.com/limuyu0110/Global-Encoding/raw/master/tables/CGU-LCSTS.png)
-
-***********************************************************
-<h4 id="3.2"> --- 3.2 WEAN </h4>
-
-##### Motivation & Idea
-In the decoding process, conventional seq2seq models typically use a dense vector in each time step to generate a distribution over the vocabulary to choose the correct word output. However, such a method takes no account of the relationships between words in the vocabulary and also suffers from a large amount of parameters (hidden_size * vocab_size). Thus, in this model, we use a query system. The output of decoder is a query, the candidate words are the values, and the corresponding word representations are the keys. By refering to the word embeddings, our model is able to capture the semantic meaning of the words.
-
-##### Performance on LCSTS(ROUGE)
-![On LSCTS](https://github.com/limuyu0110/Global-Encoding/raw/master/tables/WEAN-LSCTS.png)
-
-***********************************************************
-<h4 id="3.3"> --- 3.3 SuperAE </h4>
-
-##### Motivation & Idea
-Corpus from social media is generally long, containing many errors. A conventional seq2seq model fails to compress a long sentence into an accurate representation. So we intend to use the representation of summary (which is shorter and easier to encode) to help supervise the encoder to generate better semantic representations of the source content during training. Moreover, ideas of adverserial network is used so as to dynamically dertermine the strength of such supervision.
-
-##### Performance on LCSTS(ROUGE)
-![On LCSTS](https://github.com/limuyu0110/Global-Encoding/raw/master/tables/SuperAE-LSCTS.png)
