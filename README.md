@@ -40,13 +40,14 @@ This repository provides a toolkit for abstractive summarization, which can assi
 ***********************************************************
 
 <h4 id="1.2"> --- 1.2 Configuration </h4>
+
 Install PyTorch
 
 Clone the OpenNMT-py repository:
-'''
+```
 git clone https://github.com/lancopku/LancoSum.git
 cd LancoSum
-'''
+```
 
 In order to use pyrouge, set rouge path with the line below:
 ```
