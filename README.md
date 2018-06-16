@@ -84,7 +84,7 @@ python3 train.py -log log_name -config config_yaml -gpus id -restore checkpoint 
 
 ##### Motivation & Idea
 Conventional attention-based seq2seq model for abstractive summarization suffers from repetition and semantic irrelevance. Therefore, we propose a model containing a convolutional neural network (CNN) fitering the encoder outputs so that they can contain some information of the global context. Self-attention mechanism is implemented as well in order to dig out the correlations among these new representations of encoder outputs.
-![Model](https://github.com/justinlin610/LancoSum/raw/master/tables/CGU.png)
+![Model](https://github.com/justinlin610/LancoSum/raw/master/table/CGU.png)
 
 ##### Options
 '''
@@ -96,7 +96,7 @@ python3 train.py -log log_name -config config_yaml -gpus id -swish -selfatt
 
 ##### Motivation & Idea
 In the decoding process, conventional seq2seq models typically use a dense vector in each time step to generate a distribution over the vocabulary to choose the correct word output. However, such a method takes no account of the relationships between words in the vocabulary and also suffers from a large amount of parameters (hidden_size * vocab_size). Thus, in this model, we use a query system. The output of decoder is a query, the candidate words are the values, and the corresponding word representations are the keys. By refering to the word embeddings, our model is able to capture the semantic meaning of the words.
-![Model](https://github.com/justinlin610/LancoSum/raw/master/tables/WEAN.png)
+![Model](https://github.com/justinlin610/LancoSum/raw/master/table/WEAN.png)
 
 ##### Options
 '''
@@ -108,7 +108,7 @@ python3 train.py -log log_name -config config_yaml -gpus id -score_fn function_n
 
 ##### Motivation & Idea
 Corpus from social media is generally long, containing many errors. A conventional seq2seq model fails to compress a long sentence into an accurate representation. So we intend to use the representation of summary (which is shorter and easier to encode) to help supervise the encoder to generate better semantic representations of the source content during training. Moreover, ideas of adverserial network is used so as to dynamically dertermine the strength of such supervision.
-![Model](https://github.com/justinlin610/LancoSum/raw/master/tables/SuperAE.png)
+![Model](https://github.com/justinlin610/LancoSum/raw/master/table/SuperAE.png)
 
 ##### Options
 '''
