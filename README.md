@@ -89,7 +89,8 @@ Conventional attention-based seq2seq model for abstractive summarization suffers
 ##### Options
 ```
 python3 train.py -log log_name -config config_yaml -gpus id -swish -selfatt
-'''
+```
+
 
 ***********************************************************
 <h4 id="2.2"> --- 2.2 WEAN </h4>
@@ -101,7 +102,7 @@ In the decoding process, conventional seq2seq models typically use a dense vecto
 ##### Options
 ```
 python3 train.py -log log_name -config config_yaml -gpus id -score_fn function_name('general', 'dot', 'concat')
-'''
+```
 
 ***********************************************************
 <h4 id="2.3"> --- 2.3 SuperAE </h4>
@@ -113,7 +114,7 @@ Corpus from social media is generally long, containing many errors. A convention
 ##### Options
 ```
 python3 train.py -log log_name -config config_yaml -gpus id -sae -loss_reg ('l2', 'l1', 'cos')
-'''
+```
 
 ***********************************************************
 <h2 id="3"> 3 Citation </h2>
