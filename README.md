@@ -43,7 +43,7 @@ This repository provides a toolkit for abstractive summarization, which can assi
 
 Install PyTorch
 
-Clone the OpenNMT-py repository:
+Clone the LancoSum repository:
 ```
 git clone https://github.com/lancopku/LancoSum.git
 cd LancoSum
